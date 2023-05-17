@@ -1,12 +1,13 @@
-import React, {useMemo, useState} from 'react';
+import React, {useState} from 'react';
 import Counter from "./components/Counter";
-import ClassCounter from "./components/ClassCounter";
+import ClassCounter from './components/ClassCounter';
 import './styles/App.css';
-import PostList from "./components/PostList";
-import PostForm from "./components/PostForm";
-import PostFilter from "./components/PostFilter";
-import CoreModal from "./components/UI/CoreModal/CoreModal";
-import CoreButton from "./components/UI/CoreButton/CoreButton";
+import PostList from './components/PostList';
+import PostForm from './components/PostForm';
+import PostFilter from './components/PostFilter';
+import CoreModal from './components/UI/CoreModal/CoreModal';
+import CoreButton from './components/UI/CoreButton/CoreButton';
+import {usePosts} from './hooks/usePosts';
 
 function App() {
     const [posts, setPosts] = useState([
@@ -16,17 +17,7 @@ function App() {
     ])
     const [filter, setFilter] = useState({ sort: '', query: '' })
     const [isVisibleModal, setModalVisibility] = useState(false)
-
-    const sortedPosts = useMemo(() => {
-        if (filter.sort) {
-            return [...posts].sort((a, b) => a[filter.sort].localeCompare(b[filter.sort]))
-        } else {
-            return posts;
-        }
-    }, [filter.sort, posts]);
-    const searchAndSortedPosts = useMemo(() => {
-        return sortedPosts.filter((post) => post.title.toLowerCase().includes(filter.query))
-    }, [filter.query, sortedPosts])
+    const searchAndSortedPosts = usePosts(posts, filter.sort, filter.query);
 
     const createPost = (newPost) => {
         setPosts([ ...posts, newPost ])
@@ -38,11 +29,11 @@ function App() {
     }
 
     return (
-        <div className="App">
+        <div className='counters'>
             <CoreModal visible={isVisibleModal} setVisible={setModalVisibility}>
                 <PostForm create={createPost}/>
             </CoreModal>
-            <div className="counters">
+            <div className='counters'>
                 <Counter/>
                 <ClassCounter/>
             </div>
