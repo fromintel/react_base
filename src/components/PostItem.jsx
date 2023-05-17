@@ -1,4 +1,5 @@
 import React from 'react';
+import CoreButton from './UI/CoreButton/CoreButton';
 
 const PostItem = (props) => {
     return (
@@ -8,7 +9,7 @@ const PostItem = (props) => {
                 <p>{props.post.desc}</p>
             </div>
             <div className="post__actions">
-                <button onClick={() => props.remove(props.post)}>Remove post</button>
+                <CoreButton onClick={() => props.remove(props.post)}>Remove post</CoreButton>
             </div>
         </div>
     )
