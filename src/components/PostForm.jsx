@@ -14,7 +14,7 @@ const PostForm = ({create}) => {
 
     return (
         <form>
-            <fieldset>
+            <fieldset className='form-item'>
                 <label htmlFor="postName">Post name</label>
                 <CoreInput
                     type="text"
@@ -24,7 +24,7 @@ const PostForm = ({create}) => {
                     value={post.title}
                 />
             </fieldset>
-            <fieldset>
+            <fieldset className='form-item'>
                 <label htmlFor="desc">Post description</label>
                 <CoreInput
                     name="description"
@@ -34,7 +34,7 @@ const PostForm = ({create}) => {
                     value={post.desc}
                 />
             </fieldset>
-            <CoreButton onClick={addNewPost}>test</CoreButton>
+            <CoreButton onClick={addNewPost}>Create post</CoreButton>
         </form>
     );
 };
