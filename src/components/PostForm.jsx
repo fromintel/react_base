@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import CoreInput from "./UI/CoreInput/CoreInput";
-import CoreButton from "./UI/CoreButton/CoreButton";
+import CoreInput from './UI/CoreInput/CoreInput';
+import CoreButton from './UI/CoreButton/CoreButton';
 
 const PostForm = ({create}) => {
     const [post, setPost] = useState({ title: '', desc: '' });
