@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import Counter from "./components/Counter";
 import ClassCounter from "./components/ClassCounter";
 import './styles/App.css';
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
 import CoreSelect from "./components/UI/CoreSelect/CoreSelect";
+import CoreInput from "./components/UI/CoreInput/CoreInput";
 
 function App() {
     const [posts, setPosts] = useState([
@@ -14,6 +15,19 @@ function App() {
     ])
 
     const [selectedSort, setSelectedSort] = useState('')
+    const [search, setSearch] = useState('')
+
+    const sortedPosts = useMemo(() => {
+        if (selectedSort) {
+            return [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]))
+        } else {
+            return posts;
+        }
+    }, [selectedSort, posts]);
+
+    const searchAndSortedPosts = useMemo(() => {
+        return sortedPosts.filter((post) => post.title.toLowerCase().includes(search))
+    }, [search, sortedPosts])
 
     const createPost = (newPost) => {
         setPosts([ ...posts, newPost ])
@@ -25,7 +39,6 @@ function App() {
 
     const sortPosts = (sortValue) => {
         setSelectedSort(sortValue);
-        setPosts([...posts].sort((a, b) => a[sortValue].localeCompare(b[sortValue])))
     }
 
     return (
@@ -48,8 +61,15 @@ function App() {
                         ]}
                     />
                 </div>
-                { posts.length
-                    ? <PostList remove={removePost} posts={posts} title={'Post List 1'}/>
+                <div className="post-list__search">
+                    <CoreInput
+                        placeholder='Search...'
+                        value={search}
+                        onChange={e => setSearch(e.target.value)}
+                    />
+                </div>
+                { searchAndSortedPosts.length
+                    ? <PostList remove={removePost} posts={searchAndSortedPosts} title={'Post List 1'}/>
                     : <div>Any post is not found...</div>
                 }
             </section>
