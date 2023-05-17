@@ -5,6 +5,8 @@ import './styles/App.css';
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
 import PostFilter from "./components/PostFilter";
+import CoreModal from "./components/UI/CoreModal/CoreModal";
+import CoreButton from "./components/UI/CoreButton/CoreButton";
 
 function App() {
     const [posts, setPosts] = useState([
@@ -12,8 +14,8 @@ function App() {
         {id: 2, title: 'vvv', desc: 'a'},
         {id: 3, title: 'bbb', desc: 'l'},
     ])
-
     const [filter, setFilter] = useState({ sort: '', query: '' })
+    const [isVisibleModal, setModalVisibility] = useState(false)
 
     const sortedPosts = useMemo(() => {
         if (filter.sort) {
@@ -22,13 +24,13 @@ function App() {
             return posts;
         }
     }, [filter.sort, posts]);
-
     const searchAndSortedPosts = useMemo(() => {
         return sortedPosts.filter((post) => post.title.toLowerCase().includes(filter.query))
     }, [filter.query, sortedPosts])
 
     const createPost = (newPost) => {
         setPosts([ ...posts, newPost ])
+        setModalVisibility(false);
     }
 
     const removePost = (post) => {
@@ -37,18 +39,18 @@ function App() {
 
     return (
         <div className="App">
+            <CoreModal visible={isVisibleModal} setVisible={setModalVisibility}>
+                <PostForm create={createPost}/>
+            </CoreModal>
             <div className="counters">
                 <Counter/>
                 <ClassCounter/>
             </div>
             <hr/>
-            <PostForm create={createPost}/>
+            <CoreButton style={{marginTop: 30}} onClick={() => setModalVisibility(true)}>Create new Post +</CoreButton>
             <section className={'posts-list'}>
                 <PostFilter filter={filter} setFilter={setFilter}/>
-                { searchAndSortedPosts.length
-                    ? <PostList remove={removePost} posts={searchAndSortedPosts} title={'Post List 1'}/>
-                    : <div>Any post is not found...</div>
-                }
+                <PostList remove={removePost} posts={searchAndSortedPosts} title={'Post List 1'}/>
             </section>
 
         </div>
