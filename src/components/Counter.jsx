@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import CoreButton from './UI/CoreButton/CoreButton';
 
 const Counter = () => {
     const [counter, setCounter] = useState(0);
@@ -14,8 +15,8 @@ const Counter = () => {
     return (
         <div>
             <h3>Counter: {counter}</h3>
-            <button onClick={increment}>increment</button>
-            <button onClick={decrement}>decrement</button>
+            <CoreButton onClick={increment}>increment</CoreButton>
+            <CoreButton onClick={decrement}>decrement</CoreButton>
         </div>
     )
 }

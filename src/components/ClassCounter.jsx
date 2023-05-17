@@ -1,4 +1,5 @@
 import React from 'react';
+import CoreButton from './UI/CoreButton/CoreButton';
 
 export default class ClassCounter extends React.Component {
     constructor(props) {
@@ -23,8 +24,8 @@ export default class ClassCounter extends React.Component {
         return (
             <div>
                 <p>Counter Class: {this.state.counter}</p>
-                <button onClick={this.increment}>increment</button>
-                <button onClick={this.decrement}>decrement</button>
+                <CoreButton onClick={this.increment}>increment</CoreButton>
+                <CoreButton onClick={this.decrement}>decrement</CoreButton>
             </div>
         )
     }
