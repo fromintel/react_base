@@ -13,27 +13,14 @@ function App() {
         {id: 3, title: 'Post 3', desc: 'Post 3 description'},
     ])
 
-    const [title, setTitle] = useState('test title');
-    const [desc, setDesc] = useState('');
+    const [post, setPost] = useState({ title: '', desc: '' });
 
     const descRef = useRef();
 
     const addNewPost = (e) => {
         e.preventDefault();
-
-        const newPost = {
-            id: Date.now(),
-            title,
-            desc
-        }
-        console.log(newPost)
-        setPosts([...posts, newPost]);
-        resetPostForm();
-    }
-
-    const resetPostForm = () => {
-        setTitle('');
-        setDesc('');
+        setPosts([...posts, { ...post, id: Date.now() }]);
+        setPost({ title: '', desc: '' });
     }
 
     return (
@@ -48,9 +35,9 @@ function App() {
                     <CoreInput
                         type="text"
                         id={'postName'}
-                        onChange={e => setTitle(e.target.value)}
+                        onChange={e => setPost({ ...post, title: e.target.value })}
                         placeholder={'Enter the name of post...'}
-                        value={title}
+                        value={post.title}
                     />
                 </fieldset>
                 <fieldset>
@@ -58,9 +45,9 @@ function App() {
                     <CoreInput
                         name="description"
                         id="desc"
-                        onChange={e => setDesc(e.target.value)}
+                        onChange={e => setPost({ ...post, desc: e.target.value })}
                         placeholder={'Enter the description...'}
-                        value={desc}
+                        value={post.desc}
                         ref={descRef}
                     />
                 </fieldset>
