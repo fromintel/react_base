@@ -1,10 +1,9 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import Counter from "./components/Counter";
 import ClassCounter from "./components/ClassCounter";
 import './styles/App.css';
 import PostList from "./components/PostList";
-import CoreButton from "./components/UI/CoreButton/CoreButton";
-import CoreInput from "./components/UI/CoreInput/CoreInput";
+import PostForm from "./components/PostForm";
 
 function App() {
     const [posts, setPosts] = useState([
@@ -13,14 +12,12 @@ function App() {
         {id: 3, title: 'Post 3', desc: 'Post 3 description'},
     ])
 
-    const [post, setPost] = useState({ title: '', desc: '' });
+    const createPost = (newPost) => {
+        setPosts([ ...posts, newPost ])
+    }
 
-    const descRef = useRef();
-
-    const addNewPost = (e) => {
-        e.preventDefault();
-        setPosts([...posts, { ...post, id: Date.now() }]);
-        setPost({ title: '', desc: '' });
+    const removePost = (post) => {
+        setPosts(posts.filter((p) => post.id !== p.id));
     }
 
     return (
@@ -29,31 +26,12 @@ function App() {
                 <Counter/>
                 <ClassCounter/>
             </div>
-            <form>
-                <fieldset>
-                    <label htmlFor="postName">Post name</label>
-                    <CoreInput
-                        type="text"
-                        id={'postName'}
-                        onChange={e => setPost({ ...post, title: e.target.value })}
-                        placeholder={'Enter the name of post...'}
-                        value={post.title}
-                    />
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="desc">Post description</label>
-                    <CoreInput
-                        name="description"
-                        id="desc"
-                        onChange={e => setPost({ ...post, desc: e.target.value })}
-                        placeholder={'Enter the description...'}
-                        value={post.desc}
-                        ref={descRef}
-                    />
-                </fieldset>
-                <CoreButton onClick={addNewPost}>test</CoreButton>
-            </form>
-            <PostList posts={posts} title={'Post List 1'}/>
+            <PostForm create={createPost}/>
+            { posts.length
+                ? <PostList remove={removePost} posts={posts} title={'Post List 1'}/>
+                : <div>Any post is not found...</div>
+            }
+
         </div>
     );
 }
