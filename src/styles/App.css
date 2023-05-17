@@ -17,12 +17,21 @@ fieldset {
     width: 900px;
 }
 
+.counters {
+    margin: 20px 0;
+}
+
 .post {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    margin: 15px 10px;
+    margin: 15px 0;
     border: 1px solid teal;
     border-radius: 15px;
+}
+
+.posts-list {
+    margin: 20px;
+    padding: 10px;
 }
