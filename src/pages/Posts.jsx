@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import PostList from '../components/PostList';
 import PostForm from '../components/PostForm';
 import PostFilter from '../components/PostFilter';
@@ -10,6 +10,7 @@ import CoreLoader from '../components/UI/CoreLoader/CoreLoader';
 import {useFetching} from '../hooks/useFetching';
 import {getPageCount} from '../utils/pages';
 import CorePagination from '../components/UI/CorePagination/CorePagination';
+import {useObserver} from "../hooks/useObserver";
 
 function Posts() {
     const [posts, setPosts] = useState([]);
@@ -21,11 +22,15 @@ function Posts() {
     const searchAndSortedPosts = usePosts(posts, filter.sort, filter.query);
     const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
         const response = await PostsService.getAll(limit, page);
-        setPosts(response.data);
+        setPosts([...posts, ...response.data]);
         const totalCount = response.headers['x-total-count'];
         setTotalPages(getPageCount(totalCount, limit));
     })
+    const lastElem = useRef();
 
+    useObserver(lastElem, page < totalPages, isPostsLoading, () => {
+        setPage(page + 1);
+    });
 
     useEffect(() => {
         fetchPosts();
@@ -54,13 +59,13 @@ function Posts() {
             {
                 postError && <div>Something went wrong... {postError}</div>
             }
+            <section className={'posts-list'}>
+                <PostFilter filter={filter} setFilter={setFilter}/>
+                <PostList remove={removePost} posts={searchAndSortedPosts} title={'Post List 1'}/>
+                <div ref={lastElem} style={{height: '20px'}}/>
+            </section>
             {
-                isPostsLoading
-                    ? <div className='loader-wrapper'><CoreLoader/></div>
-                    : <section className={'posts-list'}>
-                        <PostFilter filter={filter} setFilter={setFilter}/>
-                        <PostList remove={removePost} posts={searchAndSortedPosts} title={'Post List 1'}/>
-                    </section>
+                isPostsLoading && <div className='loader-wrapper'><CoreLoader/></div>
             }
             <CorePagination
                 page={page}
