@@ -11,16 +11,24 @@ import {usePosts} from './hooks/usePosts';
 import PostsService from './api/PostsService';
 import CoreLoader from './components/UI/CoreLoader/CoreLoader';
 import {useFetching} from './hooks/useFetching';
+import {getPageCount, getPagesArray} from "./utils/pages";
+import {usePagination} from "./hooks/usePagination";
 
 function App() {
     const [posts, setPosts] = useState([]);
     const [filter, setFilter] = useState({ sort: '', query: '' });
     const [isVisibleModal, setModalVisibility] = useState(false);
+    const [totalPages, setTotalPages] = useState(0);
+    const [limit, setLimit] = useState(10);
+    const [page, setPage] = useState(1);
     const searchAndSortedPosts = usePosts(posts, filter.sort, filter.query);
     const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
-        const posts = await PostsService.getAll();
-        setPosts(posts);
+        const response = await PostsService.getAll(limit, page);
+        setPosts(response.data);
+        const totalCount = response.headers['x-total-count'];
+        setTotalPages(getPageCount(totalCount, limit));
     })
+    let pagesArray = usePagination(totalPages, page);
 
     useEffect(() => {
         fetchPosts();
@@ -58,6 +66,22 @@ function App() {
                         <PostList remove={removePost} posts={searchAndSortedPosts} title={'Post List 1'}/>
                     </section>
             }
+            <div className='pagination'>
+                {
+                    pagesArray.map((paginationNumber) =>
+                        <span
+                            key={paginationNumber}
+                            className={
+                            paginationNumber === page
+                                ? 'pagination__item pagination__item--current'
+                                : 'pagination__item'}
+                            onClick={() => setPage(paginationNumber)}
+                        >
+                            {paginationNumber}
+                        </span>
+                    )
+                }
+            </div>
 
         </div>
     );
