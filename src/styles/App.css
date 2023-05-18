@@ -81,6 +81,7 @@ fieldset {
     width: 100%;
     border-bottom: 2px solid teal;
     min-height: 50px;
+    background: white;
 }
 
 .navbar__items {
