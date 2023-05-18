@@ -10,11 +10,13 @@ fieldset {
 
 #root {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 .App {
     width: 900px;
+    padding-top: 50px;
 }
 
 .counters {
@@ -38,6 +40,10 @@ fieldset {
 .posts-list {
     margin: 20px;
     padding: 10px;
+}
+
+.post__actions {
+    display: flex;
 }
 
 .loader-wrapper {
@@ -66,6 +72,19 @@ fieldset {
 
 .pagination__item--current {
     font-weight: bold;
+}
+
+.navbar {
+    position: fixed;
+    display: flex;
+    padding: 10px 20px;
+    width: 100%;
+    border-bottom: 2px solid teal;
+    min-height: 50px;
+}
+
+.navbar__items {
+    margin-left: auto;
 }
 
 /*transitions*/
