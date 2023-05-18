@@ -8,26 +8,23 @@ import PostFilter from './components/PostFilter';
 import CoreModal from './components/UI/CoreModal/CoreModal';
 import CoreButton from './components/UI/CoreButton/CoreButton';
 import {usePosts} from './hooks/usePosts';
-import PostsService from "./api/PostsService";
-import CoreLoader from "./components/UI/CoreLoader/CoreLoader";
+import PostsService from './api/PostsService';
+import CoreLoader from './components/UI/CoreLoader/CoreLoader';
+import {useFetching} from './hooks/useFetching';
 
 function App() {
     const [posts, setPosts] = useState([]);
     const [filter, setFilter] = useState({ sort: '', query: '' });
     const [isVisibleModal, setModalVisibility] = useState(false);
     const searchAndSortedPosts = usePosts(posts, filter.sort, filter.query);
-    const [isPostLoading, setPostLoadState] = useState(false);
+    const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
+        const posts = await PostsService.getAll();
+        setPosts(posts);
+    })
 
     useEffect(() => {
         fetchPosts();
     }, [])
-
-    async function fetchPosts() {
-        setPostLoadState(true);
-        const posts = await PostsService.getAll();
-        setPosts(posts);
-        setPostLoadState(false);
-    }
 
     const createPost = (newPost) => {
         setPosts([ ...posts, newPost ])
@@ -51,7 +48,10 @@ function App() {
             <CoreButton onClick={fetchPosts}>get posts</CoreButton>
             <CoreButton style={{marginTop: 30}} onClick={() => setModalVisibility(true)}>Create new Post +</CoreButton>
             {
-                isPostLoading
+                postError && <div>Something went wrong... {postError}</div>
+            }
+            {
+                isPostsLoading
                     ? <div className='loader-wrapper'><CoreLoader/></div>
                     : <section className={'posts-list'}>
                         <PostFilter filter={filter} setFilter={setFilter}/>
