@@ -2,9 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {useFetching} from '../hooks/useFetching';
 import PostsService from '../api/PostsService';
-import CoreLoader from './UI/CoreLoader/CoreLoader';
+import CoreLoader from '../components/UI/CoreLoader/CoreLoader';
 
-const PostDetailsItem = () => {
+const PostDetails = () => {
     const params = useParams();
     const [post, setPost] = useState({});
     const [comments, setComments] = useState([]);
@@ -36,7 +36,7 @@ const PostDetailsItem = () => {
                     isCommentsLoading
                         ? <CoreLoader/>
                         : <div className='comments__container'>
-                            { comments.map((comment) => <div style={{ marginTop: '20px' }}>
+                            { comments.map((comment) => <div key={comment.id} style={{ marginTop: '20px' }}>
                                 <h5>{comment.email}</h5>
                                 <div>{comment.body}</div>
                             </div>) }
@@ -47,4 +47,4 @@ const PostDetailsItem = () => {
     );
 };
 
-export default PostDetailsItem;
+export default PostDetails;
