@@ -11,13 +11,14 @@ import {useFetching} from '../hooks/useFetching';
 import {getPageCount} from '../utils/pages';
 import CorePagination from '../components/UI/CorePagination/CorePagination';
 import {useObserver} from "../hooks/useObserver";
+import CoreSelect from "../components/UI/CoreSelect/CoreSelect";
 
 function Posts() {
     const [posts, setPosts] = useState([]);
     const [filter, setFilter] = useState({ sort: '', query: '' });
     const [isVisibleModal, setModalVisibility] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
-    const [limit] = useState(10);
+    const [limit, setLimit] = useState(10);
     const [page, setPage] = useState(1);
     const searchAndSortedPosts = usePosts(posts, filter.sort, filter.query);
     const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
@@ -34,7 +35,7 @@ function Posts() {
 
     useEffect(() => {
         fetchPosts();
-    }, [page]);
+    }, [page, limit]);
 
     const changePage = (currentPage) => {
         setPage(currentPage);
@@ -61,6 +62,17 @@ function Posts() {
             }
             <section className={'posts-list'}>
                 <PostFilter filter={filter} setFilter={setFilter}/>
+                <CoreSelect
+                    value={limit}
+                    onChange={(value) => setLimit(value)}
+                    defaultOption='Set a total entities to fetch by scroll'
+                    options={[
+                        { value: 5, title: '5' },
+                        { value: 10, title: '10' },
+                        { value: 15, title: '15' },
+                        { value: 25, title: '25' },
+                        { value: -1, title: 'All posts' }
+                    ]}/>
                 <PostList remove={removePost} posts={searchAndSortedPosts} title={'Post List 1'}/>
                 <div ref={lastElem} style={{height: '20px'}}/>
             </section>
