@@ -45,11 +45,10 @@ function Posts() {
     }
 
     return (
-        <div className='App'>
+        <div>
             <CoreModal visible={isVisibleModal} setVisible={setModalVisibility}>
                 <PostForm create={createPost}/>
             </CoreModal>
-            <hr/>
             <CoreButton onClick={fetchPosts}>get posts</CoreButton>
             <CoreButton style={{marginTop: 30}} onClick={() => setModalVisibility(true)}>Create new Post +</CoreButton>
             {
